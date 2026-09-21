@@ -1,0 +1,40 @@
+/**
+ * Design tokens extracted from Figma (file "Mirage", node 29:732, page "03_Mirage MATCH").
+ * Color/typography values marked as Figma Variables come straight from the file;
+ * values marked "derivado" were not Variables but repeated raw values found across
+ * frames, promoted to tokens here for consistency (see README for the audit).
+ */
+:root {
+  /* Brand colors — Figma Variables (Pantone/Rojo, Pag Web/Rojo, Pag Web/Gris, Blanco) */
+  --color-brand-red: #e4032c;
+  --color-brand-red-dark: #a00000;
+  --color-surface: #ffffff;
+  --color-text-muted: #5b5e5e;
+
+  /* Derivado: no son Variables de Figma, pero se repiten en todos los frames */
+  --color-page-bg: #efefef;
+  --color-text: #1e1e1e;
+  --color-input-border: #1e1e1e;
+  --color-input-bg: rgba(255, 255, 255, 0.15);
+  --color-overlay: rgba(0, 0, 0, 0.7);
+
+  /* Tipografía — Poppins para display/botones (decisión de marca), Lora para cuerpo */
+  --font-display: "Poppins", system-ui, sans-serif;
+  --font-body: "Lora", Georgia, serif;
+
+  --radius-pill: 0.83vh;
+
+  /* Escala de espaciado, unidad base ligada al viewport para escalado fluido en el tótem */
+  --space-1: clamp(4px, 0.4vh, 8px);
+  --space-2: clamp(8px, 0.8vh, 16px);
+  --space-3: clamp(12px, 1.2vh, 24px);
+  --space-4: clamp(16px, 1.6vh, 32px);
+  --space-5: clamp(24px, 2.4vh, 48px);
+  --space-6: clamp(32px, 3.2vh, 64px);
+  --space-7: clamp(48px, 4.8vh, 96px);
+  --space-8: clamp(64px, 6.4vh, 128px);
+
+  /* Marco de la app: proporción de diseño 1080x1920 (portrait) */
+  --app-aspect-ratio: 1080 / 1920;
+  --app-max-width: min(100vw, 100dvh * (1080 / 1920));
+}

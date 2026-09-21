@@ -1,0 +1,14 @@
+/**
+ * Portrait shell: the design is authored at 1080x1920. On the kiosk this
+ * fills the viewport; on wider screens (desktop QA) it degrades to a
+ * centered column clamped to the same aspect ratio instead of stretching.
+ */
+.shell {
+  position: relative;
+  height: 100dvh;
+  width: var(--app-max-width);
+  max-width: 100vw;
+  aspect-ratio: var(--app-aspect-ratio);
+  overflow: hidden;
+  background: var(--color-surface);
+}

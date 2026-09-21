@@ -1,0 +1,12 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-brand-red);
+  color: var(--color-surface);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(16px, 3vh, 28px);
+  border-radius: var(--radius-pill);
+  padding: clamp(10px, 1.6vh, 16px) var(--space-4);
+}
