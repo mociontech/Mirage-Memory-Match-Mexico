@@ -31,7 +31,10 @@ async function postJson(path: string, body: unknown): Promise<void> {
   if (!env.evius.url || !env.evius.token) {
     throw new Error("Evius is not configured (VITE_EVIUS_URL/VITE_EVIUS_TOKEN missing)");
   }
-  const response = await fetch(`${env.evius.url}${path}`, {
+  // VITE_EVIUS_URL is sometimes configured with a trailing slash - strip it
+  // so this never sends a double slash (some backends 404 on //attendees).
+  const base = env.evius.url.replace(/\/+$/, "");
+  const response = await fetch(`${base}${path}`, {
     method: "POST",
     headers: eviusHeaders(),
     body: JSON.stringify(body),
