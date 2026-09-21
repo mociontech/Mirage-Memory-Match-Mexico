@@ -14,7 +14,7 @@ const AUTO_ADVANCE_MS = 2_500;
  * button in Figma, so it auto-advances (same pattern as Ranking's dead end),
  * with a tap advancing early. Positioned to match Figma (node 123:2833,
  * 1080x1920) exactly — every left/top/width/height/font-size is
- * `(figma_px / 1920) * 100`vh, same conversion as every other screen (see
+ * `(figma_px / 1920) * 100`cqh, same conversion as every other screen (see
  * the comment in Welcome.tsx for why that's exact on this aspect-locked
  * shell). The card is a plain positioned background here; the title/
  * divider/tagline are separate siblings positioned in the same coordinate

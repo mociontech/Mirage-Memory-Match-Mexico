@@ -1,6 +1,6 @@
 /**
  * Absolute layout matching Figma's "Bienvenida y CTA" frame (node 209:221,
- * 1080x1920) exactly. Conversion: vh = (figma_px / 1920) * 100 — see the
+ * 1080x1920) exactly. Conversion: cqh = (figma_px / 1920) * 100 — see the
  * comment in Welcome.tsx for why that's exact on this aspect-locked shell.
  */
 .shell {
@@ -22,18 +22,18 @@
 
 .mark {
   position: absolute;
-  left: 20.17vh;
-  top: 23.75vh;
-  width: 15.87vh;
-  height: 5.79vh;
+  left: 20.17cqh;
+  top: 23.75cqh;
+  width: 15.87cqh;
+  height: 5.79cqh;
 }
 
 .title {
   position: absolute;
-  left: 5.16vh;
-  top: 34.69vh;
-  width: 45.94vh;
-  height: 16.56vh;
+  left: 5.16cqh;
+  top: 34.69cqh;
+  width: 45.94cqh;
+  height: 16.56cqh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -46,21 +46,21 @@
 .titleTop {
   display: block;
   color: var(--color-brand-red);
-  font-size: 8.59vh;
+  font-size: 8.59cqh;
 }
 
 .titleBottom {
   display: block;
   color: var(--color-text);
-  font-size: 6.77vh;
+  font-size: 6.77cqh;
 }
 
 .buttonBox {
   position: absolute;
-  left: 5.16vh;
-  top: 54.38vh;
-  width: 45.94vh;
-  height: 6.93vh;
+  left: 5.16cqh;
+  top: 54.38cqh;
+  width: 45.94cqh;
+  height: 6.93cqh;
 }
 
 /*
@@ -70,18 +70,18 @@
  */
 .ctaButton {
   height: 100% !important;
-  font-size: 3.39vh !important;
+  font-size: 3.39cqh !important;
 }
 
 .tagline {
   position: absolute;
-  left: 5.05vh;
-  top: 69.22vh;
-  width: 46.15vh;
+  left: 5.05cqh;
+  top: 69.22cqh;
+  width: 46.15cqh;
   font-family: var(--font-display);
   font-weight: 500;
   line-height: 0.9;
   color: var(--color-brand-red);
-  font-size: 5vh;
+  font-size: 5cqh;
   text-align: center;
 }

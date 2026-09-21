@@ -9,7 +9,7 @@ import styles from "./IdGenerated.module.css";
 /**
  * Shows the newly generated participation ID before entering the
  * instructions. Positioned to match Figma (node 209:298, 1080x1920) exactly
- * — every left/top/width/height/font-size is `(figma_px / 1920) * 100`vh,
+ * — every left/top/width/height/font-size is `(figma_px / 1920) * 100`cqh,
  * same conversion as Welcome/Register (see the comment in Welcome.tsx for
  * why that's exact on this aspect-locked shell).
  */

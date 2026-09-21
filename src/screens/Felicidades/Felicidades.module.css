@@ -1,6 +1,6 @@
 /**
  * Absolute layout matching Figma's "Felicidades" frame exactly (node
- * 123:2833, 1080x1920). Conversion: vh = (figma_px / 1920) * 100 — see the
+ * 123:2833, 1080x1920). Conversion: cqh = (figma_px / 1920) * 100 — see the
  * comment in Welcome.tsx for why that's exact on this aspect-locked shell.
  */
 .shell {
@@ -22,9 +22,9 @@
 .logo {
   position: absolute;
   left: 50%;
-  top: 5.73vh;
-  width: 36.2vh;
-  height: 5.27vh;
+  top: 5.73cqh;
+  width: 36.2cqh;
+  height: 5.27cqh;
   transform: translateX(-50%);
 }
 
@@ -35,21 +35,21 @@
  */
 .card {
   position: absolute !important;
-  left: 4.53vh;
-  top: 16.61vh;
-  width: 47.24vh !important;
-  height: 72.27vh !important;
+  left: 4.53cqh;
+  top: 16.61cqh;
+  width: 47.24cqh !important;
+  height: 72.27cqh !important;
 }
 
 .title {
   position: absolute;
   left: 50%;
-  top: 32.24vh;
-  /* Wider than the card (43vh usable) on purpose: Poppins runs wider per
+  top: 32.24cqh;
+  /* Wider than the card (43cqh usable) on purpose: Poppins runs wider per
      character than Figma's Acumin, so the literal card-width box let the
      text overflow past the left edge. */
-  width: 43vh;
-  height: 6.72vh;
+  width: 43cqh;
+  height: 6.72cqh;
   transform: translateX(-50%);
   margin: 0;
   display: flex;
@@ -58,7 +58,7 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-style: italic;
-  font-size: 6.2vh;
+  font-size: 6.2cqh;
   line-height: 1;
   color: var(--color-text);
   text-align: center;
@@ -68,9 +68,9 @@
 .divider {
   position: absolute;
   left: 50%;
-  top: 41.19vh;
-  width: 35.13vh;
-  height: 1.28vh;
+  top: 41.19cqh;
+  width: 35.13cqh;
+  height: 1.28cqh;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -89,21 +89,21 @@
    squashed it noticeably. */
 .mark {
   flex: none;
-  width: 3.36vh;
-  height: 1.28vh;
+  width: 3.36cqh;
+  height: 1.28cqh;
 }
 
 .tagline {
   position: absolute;
   left: 50%;
-  top: 52.03vh;
-  width: 42.19vh;
+  top: 52.03cqh;
+  width: 42.19cqh;
   transform: translateX(-50%);
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 0.88;
   color: var(--color-text);
-  font-size: 5.1vh;
+  font-size: 5.1cqh;
   text-align: center;
 }

@@ -7,9 +7,9 @@
   color: var(--color-surface);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(16px, 3vh, 28px);
+  font-size: clamp(16px, 3cqh, 28px);
   border-radius: var(--radius-pill);
-  padding: clamp(12px, 2.4vh, 24px) var(--space-6);
+  padding: clamp(12px, 2.4cqh, 24px) var(--space-6);
   transition: transform 120ms ease, opacity 120ms ease;
 }
 

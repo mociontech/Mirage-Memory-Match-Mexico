@@ -18,7 +18,7 @@ const TOP_N = 5;
  * backend is unreachable.
  *
  * Positioned to match Figma (node 423:290, 1080x1920) exactly — every
- * left/top/width/height/font-size is `(figma_px / 1920) * 100`vh, same
+ * left/top/width/height/font-size is `(figma_px / 1920) * 100`cqh, same
  * conversion as every other screen (see the comment in Welcome.tsx for why
  * that's exact on this aspect-locked shell).
  */

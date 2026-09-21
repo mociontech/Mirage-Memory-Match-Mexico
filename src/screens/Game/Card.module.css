@@ -92,7 +92,7 @@
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  border-radius: 0.83vh;
+  border-radius: 0.83cqh;
 }
 
 .faceDown {

@@ -1,6 +1,6 @@
 /**
  * Absolute layout matching Figma's "¡TOP 5!" frame exactly (node 423:290,
- * 1080x1920). Conversion: vh = (figma_px / 1920) * 100 — see the comment in
+ * 1080x1920). Conversion: cqh = (figma_px / 1920) * 100 — see the comment in
  * Welcome.tsx for why that's exact on this aspect-locked shell.
  */
 .shell {
@@ -22,23 +22,23 @@
 .logo {
   position: absolute;
   left: 50%;
-  top: 14.32vh;
-  width: 36.2vh;
-  height: 5.27vh;
+  top: 14.32cqh;
+  width: 36.2cqh;
+  height: 5.27cqh;
   transform: translateX(-50%);
 }
 
 .title {
   position: absolute;
   left: 0;
-  top: 28.39vh;
+  top: 28.39cqh;
   width: 100%;
   margin: 0;
   font-family: var(--font-display);
   font-weight: 800;
   font-style: italic;
-  letter-spacing: 0.7vh;
-  font-size: 10.05vh;
+  letter-spacing: 0.7cqh;
+  font-size: 10.05cqh;
   line-height: 1;
   color: var(--color-text);
   text-align: center;
@@ -51,10 +51,10 @@
  */
 .card {
   position: absolute !important;
-  left: 11.62vh;
-  top: 39.32vh;
-  width: 33.07vh !important;
-  height: 43.91vh !important;
+  left: 11.62cqh;
+  top: 39.32cqh;
+  width: 33.07cqh !important;
+  height: 43.91cqh !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,7 +76,7 @@
   text-transform: uppercase;
   text-align: center;
   color: var(--color-text-muted);
-  font-size: clamp(14px, 2.5vh, 22px);
+  font-size: clamp(14px, 2.5cqh, 22px);
   padding: var(--space-2) var(--space-2);
   white-space: nowrap;
   overflow: hidden;
@@ -90,8 +90,8 @@
 
 /*
  * A short centered rule under each name (not last), not a full-width
- * border-bottom - Figma's divider is only ~13.67vh wide, well short of the
- * card's own ~33.07vh, not edge-to-edge.
+ * border-bottom - Figma's divider is only ~13.67cqh wide, well short of the
+ * card's own ~33.07cqh, not edge-to-edge.
  */
 .row:not(:last-child)::after {
   content: "";
@@ -99,7 +99,7 @@
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 13.67vh;
+  width: 13.67cqh;
   height: 2px;
   background: var(--color-brand-red);
 }
@@ -107,6 +107,6 @@
 .empty {
   font-family: var(--font-body);
   color: var(--color-text-muted);
-  font-size: clamp(14px, 2.2vh, 18px);
+  font-size: clamp(14px, 2.2cqh, 18px);
   text-align: center;
 }

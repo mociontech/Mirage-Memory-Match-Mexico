@@ -8,8 +8,8 @@ import styles from "./Welcome.module.css";
 /**
  * Landing screen: brand splash + CTA into Register. Positioned to match the
  * Figma frame (1080x1920) pixel-for-pixel — every left/top/width/height/
- * font-size below is `(figma_px / 1920) * 100`vh, which is exact because the
- * app shell is aspect-ratio-locked to 1080x1920 (see App.module.css), so 1vh
+ * font-size below is `(figma_px / 1920) * 100`cqh, which is exact because the
+ * app shell is aspect-ratio-locked to 1080x1920 (see App.module.css), so 1cqh
  * here always means the same fraction of the frame on every screen size.
  * Unlike the other screens, this one skips ScreenShell's flex layout on
  * purpose — Figma places these elements at absolute coordinates that don't

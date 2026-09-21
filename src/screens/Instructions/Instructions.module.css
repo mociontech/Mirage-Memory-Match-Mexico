@@ -1,6 +1,6 @@
 /**
  * Absolute layout matching Figma's "Instructivo" frame exactly (node
- * 209:366, 1080x1920). Conversion: vh = (figma_px / 1920) * 100 — see the
+ * 209:366, 1080x1920). Conversion: cqh = (figma_px / 1920) * 100 — see the
  * comment in Welcome.tsx for why that's exact on this aspect-locked shell.
  */
 .shell {
@@ -21,26 +21,26 @@
 .logo {
   position: absolute;
   left: 50%;
-  top: 9.38vh;
-  width: 36.2vh;
-  height: 5.26vh;
+  top: 9.38cqh;
+  width: 36.2cqh;
+  height: 5.26cqh;
   transform: translateX(-50%);
 }
 
 .icon {
   position: absolute;
-  left: 22.66vh;
-  top: 21.51vh;
-  width: 8.49vh;
-  height: 11.25vh;
+  left: 22.66cqh;
+  top: 21.51cqh;
+  width: 8.49cqh;
+  height: 11.25cqh;
 }
 
 .title {
   position: absolute;
   left: 50%;
-  top: 34.17vh;
-  width: 45.94vh;
-  height: 7.19vh;
+  top: 34.17cqh;
+  width: 45.94cqh;
+  height: 7.19cqh;
   transform: translateX(-50%);
   margin: 0;
   display: flex;
@@ -48,7 +48,7 @@
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 5.05vh;
+  font-size: 5.05cqh;
   line-height: 1;
   color: var(--color-text);
   text-align: center;
@@ -57,11 +57,11 @@
 .list {
   position: absolute;
   left: 50%;
-  top: 42.76vh;
-  /* Wider than Figma's 48.59vh box: Poppins runs wider per character than
+  top: 42.76cqh;
+  /* Wider than Figma's 48.59cqh box: Poppins runs wider per character than
      Figma's Acumin, so the literal width wrapped every item onto an extra
      line - this keeps them on Figma's intended 2 lines each. */
-  width: 54vh;
+  width: 54cqh;
   transform: translateX(-50%);
   margin: 0;
   list-style: none;
@@ -69,10 +69,10 @@
   counter-reset: instructions-step;
   display: flex;
   flex-direction: column;
-  gap: 3.23vh;
+  gap: 3.23cqh;
   font-family: var(--font-display);
   color: var(--color-text-muted);
-  font-size: 2.97vh;
+  font-size: 2.97cqh;
   line-height: 1.09;
   text-align: center;
 }
@@ -95,14 +95,14 @@
 .buttonBox {
   position: absolute;
   left: 50%;
-  top: 80.89vh;
-  width: 35.63vh;
-  height: 6.93vh;
+  top: 80.89cqh;
+  width: 35.63cqh;
+  height: 6.93cqh;
   transform: translateX(-50%);
 }
 
 .ctaButton {
   height: 100% !important;
-  font-size: 3.39vh !important;
-  border-radius: 0.83vh !important;
+  font-size: 3.39cqh !important;
+  border-radius: 0.83cqh !important;
 }

@@ -22,19 +22,28 @@
   --font-display: "Poppins", system-ui, sans-serif;
   --font-body: "Lora", Georgia, serif;
 
-  --radius-pill: 0.83vh;
+  --radius-pill: 0.83cqh;
 
   /* Escala de espaciado, unidad base ligada al viewport para escalado fluido en el tótem */
-  --space-1: clamp(4px, 0.4vh, 8px);
-  --space-2: clamp(8px, 0.8vh, 16px);
-  --space-3: clamp(12px, 1.2vh, 24px);
-  --space-4: clamp(16px, 1.6vh, 32px);
-  --space-5: clamp(24px, 2.4vh, 48px);
-  --space-6: clamp(32px, 3.2vh, 64px);
-  --space-7: clamp(48px, 4.8vh, 96px);
-  --space-8: clamp(64px, 6.4vh, 128px);
+  --space-1: clamp(4px, 0.4cqh, 8px);
+  --space-2: clamp(8px, 0.8cqh, 16px);
+  --space-3: clamp(12px, 1.2cqh, 24px);
+  --space-4: clamp(16px, 1.6cqh, 32px);
+  --space-5: clamp(24px, 2.4cqh, 48px);
+  --space-6: clamp(32px, 3.2cqh, 64px);
+  --space-7: clamp(48px, 4.8cqh, 96px);
+  --space-8: clamp(64px, 6.4cqh, 128px);
 
-  /* Marco de la app: proporción de diseño 1080x1920 (portrait) */
+  /*
+   * Marco de la app: proporcion de diseno 1080x1920 (portrait). Las dos
+   * variables se calculan de forma simetrica (min() en ambas dimensiones,
+   * nunca un dvh fijo en una y un vw fijo en la otra) para que el marco
+   * siempre respete la proporcion exacta sin importar la del dispositivo -
+   * antes, con height:100dvh fijo, un telefono mas angosto que 9:16 (la
+   * mayoria) terminaba estirando el contenido en vez de recortar con
+   * barras, y eso es lo que se veia "corrido a la derecha" en el Note 10.
+   */
   --app-aspect-ratio: 1080 / 1920;
   --app-max-width: min(100vw, 100dvh * (1080 / 1920));
+  --app-max-height: min(100dvh, 100vw * (1920 / 1080));
 }

@@ -18,7 +18,7 @@ const POSITION_POLL_DELAYS_MS = [1_500, 3_500, 6_000];
  * No button in Figma - the whole card advances to Ranking, on tap or after
  * AUTO_ADVANCE_MS, same dead-end pattern as Ranking itself. Positioned to
  * match Figma (node 209:763, 1080x1920) exactly — every
- * left/top/width/height/font-size is `(figma_px / 1920) * 100`vh, same
+ * left/top/width/height/font-size is `(figma_px / 1920) * 100`cqh, same
  * conversion as every other screen (see the comment in Welcome.tsx for why
  * that's exact on this aspect-locked shell).
  *

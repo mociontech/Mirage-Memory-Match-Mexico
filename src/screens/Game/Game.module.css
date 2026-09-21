@@ -1,6 +1,6 @@
 /**
  * Absolute layout matching Figma's "inicio Juego" frame exactly (node
- * 209:862, 1080x1920). Conversion: vh = (figma_px / 1920) * 100 — see the
+ * 209:862, 1080x1920). Conversion: cqh = (figma_px / 1920) * 100 — see the
  * comment in Welcome.tsx for why that's exact on this aspect-locked shell.
  */
 .shell {
@@ -21,34 +21,34 @@
 .logo {
   position: absolute;
   left: 50%;
-  top: 9.38vh;
-  width: 36.2vh;
-  height: 5.26vh;
+  top: 9.38cqh;
+  width: 36.2cqh;
+  height: 5.26cqh;
   transform: translateX(-50%);
 }
 
 .badgeBox {
   position: absolute;
   left: 50%;
-  top: 22.81vh;
-  width: 24.17vh;
-  height: 5.68vh;
+  top: 22.81cqh;
+  width: 24.17cqh;
+  height: 5.68cqh;
   transform: translateX(-50%);
 }
 
 .attemptsBadge {
   height: 100% !important;
   width: 100% !important;
-  font-size: 3.39vh !important;
-  border-radius: 0.83vh !important;
+  font-size: 3.39cqh !important;
+  border-radius: 0.83cqh !important;
 }
 
 .boardWrap {
   position: absolute;
   left: 50%;
-  top: 34.53vh;
-  width: 43.33vh;
-  height: 41.3vh;
+  top: 34.53cqh;
+  width: 43.33cqh;
+  height: 41.3cqh;
   transform: translateX(-50%);
 }
 
@@ -58,5 +58,5 @@
   height: 100%;
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   grid-template-rows: repeat(var(--grid-rows), 1fr);
-  gap: 1.38vh;
+  gap: 1.38cqh;
 }

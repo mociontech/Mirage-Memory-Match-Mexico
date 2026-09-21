@@ -14,7 +14,7 @@ import styles from "./Instructions.module.css";
  * (Colombia board, Figma node 209:862).
  *
  * Positioned to match Figma (node 209:366, 1080x1920) exactly — every
- * left/top/width/height/font-size is `(figma_px / 1920) * 100`vh, same
+ * left/top/width/height/font-size is `(figma_px / 1920) * 100`cqh, same
  * conversion as Welcome/Register/IdGenerated (see the comment in Welcome.tsx
  * for why that's exact on this aspect-locked shell).
  */

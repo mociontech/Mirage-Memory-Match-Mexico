@@ -16,7 +16,7 @@ import styles from "./Register.module.css";
 /**
  * Name + email capture, or a link into RegisterId to resume with an existing
  * ID. Positioned to match Figma (node 209:235, 1080x1920) exactly — every
- * left/top/width/height/font-size is `(figma_px / 1920) * 100`vh, same
+ * left/top/width/height/font-size is `(figma_px / 1920) * 100`cqh, same
  * conversion as Welcome (see the comment there for why it's exact on this
  * aspect-locked shell). Bypasses ScreenShell's flex layout for the same
  * reason Welcome does: Figma's coordinates don't reduce to a centered column.
