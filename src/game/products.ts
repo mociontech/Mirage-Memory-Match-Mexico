@@ -1,19 +1,19 @@
-import boilerTurboFlux from "../assets/images/products/boiler-turbo-flux.webp";
 import ciMagnumComercialLigero from "../assets/images/products/ci-magnum-comercial-ligero.webp";
 import inverterX from "../assets/images/products/inverter-x.webp";
 import lavadoraAutomatica from "../assets/images/products/lavadora-automatica.webp";
 import magnumInverter22Mx from "../assets/images/products/magnum-inverter-22-mx.webp";
 import neoMinisplit from "../assets/images/products/neo-minisplit.webp";
 import rviCassette from "../assets/images/products/rvi-cassette.webp";
+import turboFluxMx from "../assets/images/products/turbo-flux-mx.webp";
 import x5OnOff from "../assets/images/products/x5-onoff.webp";
 
-import boilerTurboFluxLogo from "../assets/images/products/logos/boiler-turbo-flux-logo.png";
 import ciMagnumLogo from "../assets/images/products/logos/ci-magnum-logo.png";
 import inverterXLogo from "../assets/images/products/logos/inverter-x-logo.svg";
 import lavadoraAutomaticaLogo from "../assets/images/products/logos/lavadora-automatica-logo.png";
 import magnumInverter22MxLogo from "../assets/images/products/logos/magnum-inverter-22-mx-logo.png";
 import neoLogo from "../assets/images/products/logos/neo-logo.png";
 import rviCassetteLogo from "../assets/images/products/logos/rvi-cassette-logo.png";
+import turboFluxMxLogo from "../assets/images/products/logos/turbo-flux-mx-logo.svg";
 import x5OnOffLogo from "../assets/images/products/logos/x5-onoff-logo.svg";
 
 /** left/top/width/height as % of the card box — see CardRect below. */
@@ -121,10 +121,13 @@ export const PRODUCTS: Product[] = [
     popupCopy: "Copy pendiente del cliente para Magnum Inverter 22",
   },
   {
-    id: "boiler-turbo-flux",
+    // A diferencia de Neo/Ci Magnum, este SI es un equipo distinto al de
+    // Colombia (un calentador WiFi, no el boiler que usa el tablero CO) -
+    // foto y logo propios de este tablero, no reutilizados.
+    id: "turbo-flux-mx",
     name: "Turbo Flux",
-    logo: boilerTurboFluxLogo,
-    image: boilerTurboFlux,
+    logo: turboFluxMxLogo,
+    image: turboFluxMx,
     logoRect: { left: 27.13, top: 8.43, width: 51.06, height: 29.93 },
     photoRect: { left: 35.11, top: 40.45, width: 27.66, height: 52.81 },
     popupCopy: "Copy pendiente del cliente para Turbo Flux",
