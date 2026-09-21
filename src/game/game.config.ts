@@ -6,7 +6,7 @@
 
 /**
  * Number of matching pairs on the board. Confirmed against Figma node
- * 209:862 ("inicio Juego", COLOMBIA section): 8 products, 16 cards, 4x4 grid.
+ * 122:588 ("inicio Juego", MEXICO section): 8 products, 16 cards, 4x4 grid.
  */
 export const PAIRS_COUNT = 8;
 
