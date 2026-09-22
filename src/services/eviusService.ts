@@ -27,6 +27,20 @@ function eviusHeaders(): HeadersInit {
   };
 }
 
+interface BatchResponse {
+  received: number;
+  processed: number;
+  failed: number;
+  errors?: string[];
+}
+
+/**
+ * Datahub's batch endpoints answer 200/201 even when the individual record
+ * inside failed server-side (failed:1, the real error in errors[]) - HTTP
+ * status alone isn't enough to know the job actually landed. Without this,
+ * a per-record failure got treated as delivered and silently dropped
+ * instead of staying queued for retry.
+ */
 async function postJson(path: string, body: unknown): Promise<void> {
   if (!env.evius.url || !env.evius.token) {
     throw new Error("Evius is not configured (VITE_EVIUS_URL/VITE_EVIUS_TOKEN missing)");
@@ -42,6 +56,10 @@ async function postJson(path: string, body: unknown): Promise<void> {
   if (!response.ok) {
     throw new Error(`Evius ${path} failed: ${response.status}`);
   }
+  const result = (await response.json()) as BatchResponse;
+  if (result.failed > 0) {
+    throw new Error(`Evius ${path} rejected the record: ${result.errors?.join("; ") ?? "unknown error"}`);
+  }
 }
 
 async function runAttendeeJob(payload: unknown): Promise<void> {
@@ -49,6 +67,7 @@ async function runAttendeeJob(payload: unknown): Promise<void> {
   await postJson("/attendees", {
     eventId: env.evius.eventId,
     source: env.evius.experienceName,
+    sentAt: new Date().toISOString(),
     records: [record],
   });
 }
@@ -56,11 +75,20 @@ async function runAttendeeJob(payload: unknown): Promise<void> {
 async function postActivityFallback(record: ExperiencePayload): Promise<void> {
   await postJson("/activities", {
     eventId: env.evius.eventId,
-    experienceId: env.evius.experienceId,
+    source: env.evius.experienceName,
+    sentAt: new Date().toISOString(),
+    // Per Datahub's own docs, /activities only accepts
+    // name/shortDescription/longDescription/startDate/endDate/capacity -
+    // no email/experienceId field exists there, so those go inside the
+    // JSON blob in longDescription instead. `name` is the one required
+    // field; without it the whole record is rejected server-side.
     records: [
       {
-        email: record.email,
+        name: env.evius.experienceName,
+        shortDescription: record.email,
         longDescription: JSON.stringify({
+          email: record.email,
+          experienceId: env.evius.experienceId,
           score: record.score,
           bonusScore: record.bonusScore,
           play_timestamp: record.play_timestamp,
@@ -77,6 +105,8 @@ async function runExperienceJob(payload: unknown): Promise<void> {
     await postJson("/experiences", {
       eventId: env.evius.eventId,
       experienceId: env.evius.experienceId,
+      source: env.evius.experienceName,
+      sentAt: new Date().toISOString(),
       records: [record],
     });
   } catch {
