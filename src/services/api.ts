@@ -110,10 +110,7 @@ async function submitRanking(participation: Participation): Promise<void> {
       // table (no UPDATE/SELECT), so `resolution=merge-duplicates` would
       // make Postgres reject every insert with 42501 while planning the
       // ON CONFLICT DO UPDATE it implies - see docs/supabase-schema.sql in
-      // the Catalogo project for the RLS policies. A genuine retry of the
-      // same participation is rejected with 409 by the unique constraint,
-      // which is fine: the client already guards against replay via
-      // hasEmailPlayedLocally.
+      // the Catalogo project for the RLS policies.
       Prefer: "return=minimal",
     },
     body: JSON.stringify({
@@ -125,6 +122,13 @@ async function submitRanking(participation: Participation): Promise<void> {
       submitted_at: participation.finishedAt,
     }),
   });
+  // 409 = el unique constraint (participant_id, country, experience)
+  // rechazando un duplicado real - nunca es transitorio, reintentarlo jamas
+  // va a funcionar. Antes esto lanzaba igual que cualquier otro fallo, y el
+  // outbox lo reintentaba para siempre (persistido en localStorage, revivido
+  // en cada carga de pagina). Se trata como entrega exitosa: la fila que se
+  // queria ya esta ahi.
+  if (res.status === 409) return;
   if (!res.ok) throw new Error(`Ranking DB submit failed: ${res.status}`);
 }
 
