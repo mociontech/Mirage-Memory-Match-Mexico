@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GAME_DURATION_MS, MISMATCH_DELAY_MS, PAIRS_COUNT, getGridColumns } from "./game.config";
+import { pickRandomMatchPhrase } from "./matchPhrases";
 import { PRODUCTS, type Product } from "./products";
 import { shuffle } from "./shuffle";
 import { computeScore } from "./scoring";
@@ -38,6 +39,8 @@ export interface UseMemoryGameResult {
   shakingIds: string[];
   /** Set right after a match resolves; screens use this to open ProductPopup. Cleared by acknowledgeMatch. */
   lastMatchedProduct: Product | null;
+  /** Frase random (ver matchPhrases.ts) elegida al momento del match - una por match, no por producto. */
+  lastMatchPhrase: string | null;
   flipCard: (cardId: string) => void;
   /** Call when ProductPopup has been dismissed, so the next flip is accepted again. */
   acknowledgeMatch: () => void;
@@ -64,6 +67,7 @@ export function useMemoryGame(timerActive = true): UseMemoryGameResult {
   const [mismatches, setMismatches] = useState(0);
   const [timeRemainingMs, setTimeRemainingMs] = useState(GAME_DURATION_MS);
   const [lastMatchedProduct, setLastMatchedProduct] = useState<Product | null>(null);
+  const [lastMatchPhrase, setLastMatchPhrase] = useState<string | null>(null);
   const [awaitingAcknowledge, setAwaitingAcknowledge] = useState(false);
   /** Card ids currently shaking off a wrong guess — cleared once they flip back down. */
   const [shakingIds, setShakingIds] = useState<string[]>([]);
@@ -137,6 +141,7 @@ export function useMemoryGame(timerActive = true): UseMemoryGameResult {
         setMatches((prev) => prev + 1);
         const product = PRODUCTS.find((p) => p.id === target.productId) ?? null;
         setLastMatchedProduct(product);
+        setLastMatchPhrase(pickRandomMatchPhrase());
         setAwaitingAcknowledge(true);
         setPhase("idle");
       } else {
@@ -159,6 +164,7 @@ export function useMemoryGame(timerActive = true): UseMemoryGameResult {
 
   const acknowledgeMatch = useCallback(() => {
     setLastMatchedProduct(null);
+    setLastMatchPhrase(null);
     setAwaitingAcknowledge(false);
   }, []);
 
@@ -174,6 +180,7 @@ export function useMemoryGame(timerActive = true): UseMemoryGameResult {
     matchedProductIds,
     shakingIds,
     lastMatchedProduct,
+    lastMatchPhrase,
     flipCard,
     acknowledgeMatch,
   };

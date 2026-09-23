@@ -37,6 +37,7 @@ export function Game() {
     matchedProductIds,
     shakingIds,
     lastMatchedProduct,
+    lastMatchPhrase,
     flipCard,
     acknowledgeMatch,
   } = useMemoryGame(introStage === "playing");
@@ -115,7 +116,7 @@ export function Game() {
       <ProductPopup
         open={lastMatchedProduct !== null}
         onClose={acknowledgeMatch}
-        copy={lastMatchedProduct?.popupCopy ?? ""}
+        copy={lastMatchPhrase ?? ""}
       />
       <Footer />
     </div>
