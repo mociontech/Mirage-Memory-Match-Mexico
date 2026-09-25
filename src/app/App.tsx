@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { FlowProvider, useFlow } from "./FlowMachine";
 import { useIdleReset } from "../hooks/useIdleReset";
+import { preloadProductAssets } from "../game/products";
 import { initOutboxFlush } from "../services/outbox";
 import { Welcome } from "../screens/Welcome";
 import { Register } from "../screens/Register";
@@ -67,6 +68,9 @@ function AppShell() {
   useIdleReset(reset);
   useKioskGestureLock();
   useEffect(() => initOutboxFlush(), []);
+  // Arranca en el mismo instante que Welcome (no espera a llegar a Game) -
+  // ver el comentario en game/products.ts#preloadProductAssets.
+  useEffect(() => preloadProductAssets(), []);
 
   return (
     <div className={styles.shell}>

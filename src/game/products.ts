@@ -56,6 +56,32 @@ export interface Product {
  * PENDING: popupCopy is still placeholder for all products — Figma only
  * shows the board itself, no final popup copy yet.
  */
+/**
+ * Fuerza la descarga + decode real (no solo bytes) de las 16 imagenes del
+ * tablero (8 fotos + 8 logos) apenas arranca la app - mismo patron que usa
+ * la pitch de Products para sus banners. Sin esto, el primer <img> de cada
+ * producto recien empezaba a pedirse cuando Game.tsx montaba (con la
+ * revelacion inicial de las 8 parejas de una), lo que en wifi de stand
+ * (venue congestionado, no la red de oficina donde se prueba normalmente)
+ * dejaba tarjetas en blanco varias partidas seguidas: no es que el cache
+ * "se llenara" jugando, es que cada carga fresca de la app volvia a pelear
+ * por las mismas 16 descargas justo cuando mas apuran (la revelacion dura
+ * INTRO_REVEAL_DURATION_MS). Llamar esto en el mount de App.tsx les da
+ * todo el resto del flujo (Welcome -> Registro -> Instructivo) para llegar
+ * a destino antes de que hagan falta. decode() puede no existir en
+ * navegadores viejos, de ahi el optional chaining + catch mudo (no es
+ * fatal, solo se pierde el adelanto).
+ */
+export function preloadProductAssets(): void {
+  for (const product of PRODUCTS) {
+    for (const src of [product.image, product.logo]) {
+      const img = new Image();
+      img.src = src;
+      img.decode?.().catch(() => {});
+    }
+  }
+}
+
 export const PRODUCTS: Product[] = [
   {
     id: "x5-onoff",

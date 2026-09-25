@@ -16,3 +16,13 @@ createRoot(container).render(
     <App />
   </StrictMode>,
 );
+
+// Cache-first para imagenes/fuentes propias del build (ver public/sw.js) -
+// registrado despues del render para no competir con el primer paint.
+// serviceWorker no existe si la app corre por http:// plano (no localhost),
+// de ahi el chequeo explicito en vez de dejar que tire.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
