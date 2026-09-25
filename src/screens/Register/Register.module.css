@@ -42,6 +42,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: -0.04em;
   font-size: 5.05cqh;
   line-height: 1;
   color: var(--color-brand-red);
@@ -116,6 +117,7 @@
      display font, so it's used here too for consistency. */
   font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: -0.04em;
   font-size: 2.4cqh;
   color: var(--color-text-muted);
   text-decoration: underline;

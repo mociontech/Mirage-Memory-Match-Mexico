@@ -20,6 +20,7 @@
   text-align: center;
   font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: -0.04em;
   font-style: italic;
   font-size: 5.16cqh;
   color: var(--color-text-muted);

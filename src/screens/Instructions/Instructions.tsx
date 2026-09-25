@@ -30,15 +30,18 @@ export function Instructions() {
       <h1 className={styles.title}>Instructivo</h1>
       <ol className={styles.list}>
         <li>
-          Toca las tarjetas en el tablero para <strong>descubrir objetos.</strong>
+          Toca las tarjetas en el tablero <br />
+          para <strong>descubrir objetos.</strong>
         </li>
         <li>
-          Por cada coincidencia correcta, <strong>desbloquearás un beneficio</strong> y sumarás
-          puntos.
+          Por cada coincidencia correcta, <br />
+          <strong>desbloquearás un beneficio</strong> y <br />
+          sumarás puntos.
         </li>
         <li>
-          Si completas las {PAIRS_COUNT}, <strong>podrás canjear tus puntos</strong> por premios y
-          pasar a la siguiente experiencia.
+          Si completas las {PAIRS_COUNT}, <strong>podrás</strong> <br />
+          <strong>canjear tus puntos</strong> por premios <br />
+          y pasar a la siguiente experiencia.
         </li>
       </ol>
       <div className={styles.buttonBox}>

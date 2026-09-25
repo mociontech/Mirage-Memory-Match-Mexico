@@ -5,7 +5,8 @@
   background: var(--color-brand-red);
   color: var(--color-surface);
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   font-size: clamp(16px, 3cqh, 28px);
   border-radius: var(--radius-pill);
   padding: clamp(10px, 1.6cqh, 16px) var(--space-4);

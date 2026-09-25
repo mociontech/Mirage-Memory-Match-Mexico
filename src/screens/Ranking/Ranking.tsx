@@ -9,6 +9,14 @@ import styles from "./Ranking.module.css";
 
 const AUTO_ADVANCE_MS = 7_000;
 const TOP_N = 5;
+/** Max chars shown for a name before truncating with "…" - keeps every row's
+ * proportions/spacing intact regardless of how long a name is, instead of
+ * relying only on CSS ellipsis (which depends on the rendered pixel width). */
+const NAME_MAX_CHARS = 6;
+
+function truncateName(name: string): string {
+  return name.length > NAME_MAX_CHARS ? `${name.slice(0, NAME_MAX_CHARS)}…` : name;
+}
 
 /**
  * Top 5. Closes the loop back to Welcome — after AUTO_ADVANCE_MS or on the
@@ -55,7 +63,7 @@ export function Ranking() {
           <ol className={styles.list}>
             {entries.map((entry, index) => (
               <li key={`${entry.name}-${index}`} className={styles.row}>
-                <span>{entry.name}</span>{" "}
+                <span className={styles.name}>{truncateName(entry.name)}</span>
                 <span className={styles.score}>{Math.round(entry.points)}pt</span>
               </li>
             ))}

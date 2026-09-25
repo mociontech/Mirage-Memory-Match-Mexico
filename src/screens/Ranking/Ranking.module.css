@@ -35,7 +35,7 @@
   width: 100%;
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-style: italic;
   letter-spacing: 0.7cqh;
   font-size: 10.05cqh;
@@ -70,21 +70,33 @@
 
 .row {
   position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.3em;
   font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: -0.04em;
   font-style: italic;
   text-transform: uppercase;
   text-align: center;
   color: var(--color-text-muted);
-  font-size: clamp(14px, 2.5cqh, 22px);
+  font-size: clamp(20px, 4.01cqh, 40px);
   padding: var(--space-2) var(--space-2);
-  white-space: nowrap;
+}
+
+/* Solo el nombre se trunca con "..." si no cabe - el puntaje (.score) nunca
+   se corta, siempre queda completo y visible (mismo patron que Products). */
+.name {
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* Score per name, in red - added alongside the name (Figma: "JUAN 110PT"). */
 .score {
+  flex: none;
   color: var(--color-brand-red);
 }
 
