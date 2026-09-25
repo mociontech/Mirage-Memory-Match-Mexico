@@ -87,12 +87,12 @@ export function Register() {
   return (
     <div className={styles.shell}>
       <BrandFrame />
-      <div className={styles.logo}>
+      <div className={`${styles.logo} enterFromTop`}>
         <Logo />
       </div>
-      <h1 className={styles.title}>REGISTRO</h1>
+      <h1 className={`${styles.title} enterFromLeft delay1`}>REGISTRO</h1>
 
-      <div className={`${styles.fieldBox} ${styles.nameField}`}>
+      <div className={`${styles.fieldBox} ${styles.nameField} enterFromLeft delay2`}>
         <TextField
           icon={<img src={iconPerson} alt="" />}
           iconClassName={styles.nameIcon}
@@ -101,7 +101,7 @@ export function Register() {
           onChange={(event) => setName(event.target.value)}
         />
       </div>
-      <div className={`${styles.fieldBox} ${styles.emailField}`}>
+      <div className={`${styles.fieldBox} ${styles.emailField} enterFromRight delay3`}>
         <TextField
           icon={<img src={iconEnvelope} alt="" />}
           iconClassName={styles.emailIcon}
@@ -113,12 +113,16 @@ export function Register() {
         />
       </div>
 
-      <div className={styles.buttonBox}>
+      <div className={`${styles.buttonBox} enterFromBottom delay4`}>
         <Button className={styles.ctaButton} onClick={handleSubmit} disabled={!canSubmit}>
           {checking ? "Verificando..." : "Comenzar"}
         </Button>
       </div>
-      <button className={styles.link} onClick={handleDigitaId} disabled={!canSubmit}>
+      <button
+        className={`${styles.link} enterFade delay5`}
+        onClick={handleDigitaId}
+        disabled={!canSubmit}
+      >
         ó Digita ID
       </button>
 

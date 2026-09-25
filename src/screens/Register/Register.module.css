@@ -123,6 +123,17 @@
   text-decoration: underline;
   text-align: center;
   text-transform: uppercase;
+  transition: color 200ms ease;
+}
+
+@media (hover: hover) {
+  .link:hover:not(:disabled) {
+    color: var(--color-brand-red);
+  }
+}
+
+.link:active:not(:disabled) {
+  color: var(--color-brand-red);
 }
 
 .link:disabled {

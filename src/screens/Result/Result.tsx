@@ -79,13 +79,15 @@ export function Result() {
   return (
     <div className={styles.shell} onClick={() => navigate("ranking")}>
       <BrandFrame />
-      <div className={styles.logo}>
+      <div className={`${styles.logo} enterFromTop`}>
         <Logo />
       </div>
-      <h1 className={styles.title}>¡Gracias por participar!</h1>
-      <div className={styles.scoreBox}>{Math.round(session.score)}</div>
-      <p className={styles.label}>Acumulaste</p>
-      {position !== null && <p className={styles.position}>Vas en el puesto #{position}</p>}
+      <h1 className={`${styles.title} enterFromLeft delay1`}>¡Gracias por participar!</h1>
+      <div className={`${styles.scoreBox} enterScale delay2`}>{Math.round(session.score)}</div>
+      <p className={`${styles.label} enterFade delay3`}>Acumulaste</p>
+      {position !== null && (
+        <p className={`${styles.position} enterFade delay4`}>Vas en el puesto #{position}</p>
+      )}
       <Footer />
     </div>
   );

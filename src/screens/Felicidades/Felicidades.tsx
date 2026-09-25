@@ -31,17 +31,17 @@ export function Felicidades() {
   return (
     <div className={styles.shell} onClick={() => navigate("result")}>
       <BrandFrame />
-      <div className={styles.logo}>
+      <div className={`${styles.logo} enterFromTop`}>
         <Logo />
       </div>
-      <NotchedCard className={styles.card} />
-      <h1 className={styles.title}>¡Felicidades!</h1>
-      <div className={styles.divider}>
+      <NotchedCard className={`${styles.card} enterScale delay1`} />
+      <h1 className={`${styles.title} enterFromLeft delay2`}>¡Felicidades!</h1>
+      <div className={`${styles.divider} enterFade delay3`}>
         <span className={styles.line} />
         <img className={styles.mark} src={logoMark} alt="" aria-hidden="true" />
         <span className={styles.line} />
       </div>
-      <p className={styles.tagline}>
+      <p className={`${styles.tagline} enterFade delay4`}>
         Acondicionamos tu vida<sup>®</sup>
       </p>
       <Footer />

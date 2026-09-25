@@ -23,12 +23,17 @@ export function Instructions() {
   return (
     <div className={styles.shell}>
       <BrandFrame />
-      <div className={styles.logo}>
+      <div className={`${styles.logo} enterFromTop`}>
         <Logo />
       </div>
-      <img className={styles.icon} src={instructionsIcon} alt="" aria-hidden="true" />
-      <h1 className={styles.title}>Instructivo</h1>
-      <ol className={styles.list}>
+      <img
+        className={`${styles.icon} enterScale delay1`}
+        src={instructionsIcon}
+        alt=""
+        aria-hidden="true"
+      />
+      <h1 className={`${styles.title} enterFromLeft delay1`}>Instructivo</h1>
+      <ol className={`${styles.list} enterFade delay2`}>
         <li>
           Toca las tarjetas en el tablero <br />
           para <strong>descubrir objetos.</strong>
@@ -44,7 +49,7 @@ export function Instructions() {
           y pasar a la siguiente experiencia.
         </li>
       </ol>
-      <div className={styles.buttonBox}>
+      <div className={`${styles.buttonBox} enterFromBottom delay3`}>
         <Button className={styles.ctaButton} onClick={() => navigate("game")}>
           Iniciar
         </Button>
