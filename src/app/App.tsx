@@ -40,6 +40,32 @@ function useKioskGestureLock(): void {
   }, []);
 }
 
+/**
+ * Algunos totems (navegador dentro de una app Android en modo kiosco) no
+ * entran solos a pantalla completa al cargar - los navegadores exigen un
+ * gesto real del usuario para requestFullscreen(), asi que no se puede
+ * disparar automaticamente en el primer render. Esto engancha el PRIMER
+ * toque/click en cualquier parte de la pantalla para pedir fullscreen ahi
+ * mismo (una sola vez) y despues se desconecta solo - no interfiere con
+ * nada del resto de la app.
+ */
+function useForceFullscreenOnFirstTap(): void {
+  useEffect(() => {
+    if (document.fullscreenElement) return;
+
+    const requestFullscreenOnce = () => {
+      document.removeEventListener("pointerdown", requestFullscreenOnce);
+      void document.documentElement.requestFullscreen?.().catch(() => {
+        // Algunos navegadores/politicas rechazan el pedido (ej. ya esta en
+        // fullscreen via la app nativa del totem) - no es un error real.
+      });
+    };
+
+    document.addEventListener("pointerdown", requestFullscreenOnce, { once: true });
+    return () => document.removeEventListener("pointerdown", requestFullscreenOnce);
+  }, []);
+}
+
 function CurrentScreen() {
   const { screen } = useFlow();
   switch (screen) {
@@ -68,6 +94,7 @@ function AppShell() {
   const { reset } = useFlow();
   useIdleReset(reset);
   useKioskGestureLock();
+  useForceFullscreenOnFirstTap();
   useEffect(() => initOutboxFlush(), []);
   // Arranca en el mismo instante que Welcome (no espera a llegar a Game) -
   // ver el comentario en game/products.ts#preloadProductAssets.
