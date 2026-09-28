@@ -3,20 +3,13 @@ import { useFlow } from "../../app/FlowMachine";
 import { BrandFrame } from "../../components/BrandFrame";
 import { Footer } from "../../components/Footer";
 import { Logo } from "../../components/Logo";
+import { MarqueeText } from "../../components/MarqueeText";
 import { NotchedCard } from "../../components/NotchedCard";
-import { getTop10, type RankingEntry } from "../../services/ranking";
+import { getCachedTop10, getTop10, type RankingEntry } from "../../services/ranking";
 import styles from "./Ranking.module.css";
 
 const AUTO_ADVANCE_MS = 7_000;
 const TOP_N = 5;
-/** Max chars shown for a name before truncating with "…" - keeps every row's
- * proportions/spacing intact regardless of how long a name is, instead of
- * relying only on CSS ellipsis (which depends on the rendered pixel width). */
-const NAME_MAX_CHARS = 6;
-
-function truncateName(name: string): string {
-  return name.length > NAME_MAX_CHARS ? `${name.slice(0, NAME_MAX_CHARS)}…` : name;
-}
 
 /**
  * Top 5. Closes the loop back to Welcome — after AUTO_ADVANCE_MS or on the
@@ -32,7 +25,10 @@ function truncateName(name: string): string {
  */
 export function Ranking() {
   const { reset } = useFlow();
-  const [entries, setEntries] = useState<RankingEntry[]>([]);
+  // Arranca con lo que Result.tsx ya haya prefeteado (prefetchTop10) en vez
+  // de [] - evita el parpadeo de "Aun no hay resultados" mientras se repite
+  // el fetch por si el cache quedo desactualizado.
+  const [entries, setEntries] = useState<RankingEntry[]>(() => getCachedTop10() ?? []);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,7 +63,9 @@ export function Ranking() {
                 className={`${styles.row} enterFromRight`}
                 style={{ animationDelay: `${240 + index * 70}ms` }}
               >
-                <span className={styles.name}>{truncateName(entry.name)}</span>
+                <span className={styles.name}>
+                  <MarqueeText text={entry.name} />
+                </span>
                 <span className={styles.score}>{Math.round(entry.points)}pt</span>
               </li>
             ))}

@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useFlow } from "../../app/FlowMachine";
-import { checkEmailUsedRemotely, generateId, hasEmailPlayedLocally, rememberUsedEmail } from "../../services/idService";
+import {
+  checkEmailUsedRemotely,
+  generateId,
+  hasEmailPlayedLocally,
+  rememberUsedEmail,
+  submitRegistration,
+} from "../../services/idService";
 import { BrandFrame } from "../../components/BrandFrame";
 import { Button } from "../../components/Button";
 import { Footer } from "../../components/Footer";
@@ -56,31 +62,20 @@ export function Register() {
       return;
     }
 
-    setSession({ name: name.trim(), email: trimmedEmail, id: generateId() });
+    const id = generateId();
+    setSession({ name: name.trim(), email: trimmedEmail, id });
+    // Guarda el registro asociado a este codigo para que "Digita ID" lo
+    // pueda recuperar despues - no se espera (nunca bloquea la navegacion).
+    void submitRegistration(id, { name: name.trim(), email: trimmedEmail });
     navigate("idGenerated");
   };
 
-  const handleDigitaId = async () => {
-    if (!canSubmit) return;
-    const trimmedEmail = email.trim();
-
-    if (hasEmailPlayedLocally(trimmedEmail)) {
-      setShowAdvertencia(true);
-      return;
-    }
-
-    setChecking(true);
-    const usedRemotely = await checkEmailUsedRemotely(trimmedEmail);
-    setChecking(false);
-    if (usedRemotely) {
-      rememberUsedEmail(trimmedEmail);
-      setShowAdvertencia(true);
-      return;
-    }
-
-    // RegisterId only collects the ID itself — name/email must already be in the
-    // session before navigating there, or the final submit goes out with no email.
-    setSession({ name: name.trim(), email: trimmedEmail });
+  /**
+   * Reingreso rapido: no exige nombre/correo (a diferencia de antes) porque
+   * quien ya tiene un codigo no deberia tener que volver a llenarlos - eso
+   * es justamente lo que RegisterId recupera al buscar el codigo.
+   */
+  const handleDigitaId = () => {
     navigate("registerId");
   };
 
@@ -118,11 +113,7 @@ export function Register() {
           {checking ? "Verificando..." : "Comenzar"}
         </Button>
       </div>
-      <button
-        className={`${styles.link} enterFade delay5`}
-        onClick={handleDigitaId}
-        disabled={!canSubmit}
-      >
+      <button className={`${styles.link} enterFade delay5`} onClick={handleDigitaId}>
         ó Digita ID
       </button>
 

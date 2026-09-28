@@ -5,7 +5,7 @@ import { Footer } from "../../components/Footer";
 import { Logo } from "../../components/Logo";
 import { rememberUsedEmail, rememberUsedId } from "../../services/idService";
 import { enqueueParticipation } from "../../services/outbox";
-import { getMyPosition } from "../../services/ranking";
+import { getMyPosition, prefetchTop10 } from "../../services/ranking";
 import type { Participation } from "../../types/participation";
 import styles from "./Result.module.css";
 
@@ -52,6 +52,9 @@ export function Result() {
       kioskId: import.meta.env.VITE_KIOSK_ID,
     };
     enqueueParticipation(participation);
+    // Adelanta el fetch del Top 10 mientras el visitante sigue viendo esta
+    // pantalla (7s de AUTO_ADVANCE_MS) para que Ranking ya lo tenga listo.
+    prefetchTop10();
   }, [session]);
 
   useEffect(() => {

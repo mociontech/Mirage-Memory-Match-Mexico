@@ -74,7 +74,10 @@ export function Game() {
         matchedProducts: matchedProductIds,
         finishedAt: new Date().toISOString(),
       });
-      navigate("felicidades");
+      // Felicidades queda fuera del flujo (aporta poco visualmente) sin
+      // borrar la pantalla - salta directo a Result. navigate("felicidades")
+      // sigue siendo una ruta valida en App.tsx si se quiere reactivar.
+      navigate("result");
     }
   }, [phase, lastMatchedProduct, score, attempts, matchedProductIds, navigate, setSession]);
 
