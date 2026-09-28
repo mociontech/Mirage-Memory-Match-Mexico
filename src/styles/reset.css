@@ -20,7 +20,14 @@ body {
 
 body {
   min-height: 100dvh;
-  background: var(--color-page-bg);
+  /* Mismo degradado que usa cada pantalla (ver sus .shell) - en pantallas
+     mas altas que la proporcion 9:16 del diseno (como algunos totems), la
+     caja aspect-locked (App.module.css) deja barras vacias arriba/abajo;
+     esto hace que esas barras muestren el mismo fondo en vez de un color
+     plano, para que se sienta continuo con el alto real de la pantalla en
+     vez de "espacio vacio". */
+  background: linear-gradient(126.96deg, rgba(255, 255, 255, 0.5) 24.12%, rgba(53, 68, 77, 0.5) 129.36%),
+    var(--color-page-bg);
   color: var(--color-text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
