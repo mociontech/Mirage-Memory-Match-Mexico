@@ -1,11 +1,20 @@
-/* Positions replicate the offset red accent bars from Figma (top bar flush
-   left, bottom bar flush right) — expressed as % of the 1080x1920 canvas so
-   they scale with the app shell instead of being pinned to fixed pixels. */
+/**
+ * Positions replicate the offset red accent bars from Figma (top bar flush
+ * left, bottom bar flush right). `position: fixed` + `vw` (not `absolute` +
+ * `%` of the 1080x1920 shell) a proposito: el shell esta centrado y su
+ * ancho real siempre iguala al del viewport (es el alto el que se achica
+ * para mantener la proporcion 9:16 en pantallas mas altas, como algunos
+ * totems) - con `absolute`/`%` las barras quedaban anTes ancladas al borde
+ * de esa caja, no al borde real de la pantalla, dejando un hueco de fondo
+ * arriba/abajo. `fixed` ignora la caja y se posiciona contra la pantalla
+ * real directamente; `vw` en vez de `%` porque el ancho de referencia sigue
+ * siendo el mismo (100vw), la unidad es la que cambia.
+ */
 .bar {
-  position: absolute;
-  left: -0.093%;
-  width: 63.611%;
-  height: 1.25%;
+  position: fixed;
+  left: -0.093vw;
+  width: 63.611vw;
+  height: 2.2222vw;
   background: var(--color-brand-red);
   border-radius: 2px;
   pointer-events: none;
@@ -16,6 +25,6 @@
 }
 
 .bottom {
-  left: 36.389%;
-  top: 98.75%;
+  left: 36.389vw;
+  bottom: 0;
 }
