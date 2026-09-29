@@ -43,10 +43,19 @@ export function hasEmailPlayedLocally(email: string): boolean {
   return readUsedEmailsCache().includes(normalizeEmail(email));
 }
 
-/** Generates a fresh "123-456"-style participation ID. */
+/**
+ * Genera un codigo de 6 digitos, SIN guion (antes era "123-456") - mismo
+ * formato que generateParticipantCode() en la version tablet+pitch de
+ * Products. El guion era solo decorativo aca, pero un codigo generado en
+ * Products nunca lo tenia; al buscarlo desde "Digita ID" (que reconstruye
+ * la busqueda con guion) nunca calzaba - un codigo real generado en la
+ * tablet daba "no encontrado" al intentar usarlo aca. El guion visual en
+ * pantalla lo sigue poniendo IdInput/IdGenerated (por posicion, no porque
+ * el string lo tenga) - ver el ajuste ahi.
+ */
 export function generateId(): string {
   const block = () => String(Math.floor(Math.random() * 10 ** BLOCK_LENGTH)).padStart(BLOCK_LENGTH, "0");
-  return `${block()}-${block()}`;
+  return `${block()}${block()}`;
 }
 
 function readUsedIdsCache(): string[] {

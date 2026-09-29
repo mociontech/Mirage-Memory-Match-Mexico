@@ -15,8 +15,11 @@ import styles from "./IdGenerated.module.css";
  */
 export function IdGenerated() {
   const { navigate, session } = useFlow();
-  const [first = "", second = ""] = session.id.split("-");
-  const blocks: IdInputValue = [first, second];
+  // Por posicion (3+3), no por un guion literal - generateId() ya no lo
+  // incluye (ver el comentario en idService.ts), pero un id viejo con
+  // guion en sessionStorage tambien sigue viendose bien igual.
+  const digitsOnly = session.id.replace(/\D/g, "");
+  const blocks: IdInputValue = [digitsOnly.slice(0, 3), digitsOnly.slice(3, 6)];
 
   return (
     <div className={styles.shell}>
