@@ -45,24 +45,29 @@ function useKioskGestureLock(): void {
  * entran solos a pantalla completa al cargar - los navegadores exigen un
  * gesto real del usuario para requestFullscreen(), asi que no se puede
  * disparar automaticamente en el primer render. Esto engancha el PRIMER
- * toque/click en cualquier parte de la pantalla para pedir fullscreen ahi
- * mismo (una sola vez) y despues se desconecta solo - no interfiere con
- * nada del resto de la app.
+ * click en cualquier parte de la pantalla para pedir fullscreen ahi mismo
+ * (una sola vez) y despues se desconecta solo.
+ *
+ * Escucha "click", NO "pointerdown": pointerdown dispara ANTES de que el
+ * boton tocado procese su propio click (pointerdown -> pointerup -> click),
+ * asi que pedir fullscreen ahi podia redimensionar la pagina a mitad del
+ * gesto y hacer que el click real (ej. "Iniciar") no llegara a registrarse.
+ * Con "click", el boton ya disparo su propio onClick primero.
  */
 function useForceFullscreenOnFirstTap(): void {
   useEffect(() => {
     if (document.fullscreenElement) return;
 
     const requestFullscreenOnce = () => {
-      document.removeEventListener("pointerdown", requestFullscreenOnce);
+      document.removeEventListener("click", requestFullscreenOnce);
       void document.documentElement.requestFullscreen?.().catch(() => {
         // Algunos navegadores/politicas rechazan el pedido (ej. ya esta en
         // fullscreen via la app nativa del totem) - no es un error real.
       });
     };
 
-    document.addEventListener("pointerdown", requestFullscreenOnce, { once: true });
-    return () => document.removeEventListener("pointerdown", requestFullscreenOnce);
+    document.addEventListener("click", requestFullscreenOnce, { once: true });
+    return () => document.removeEventListener("click", requestFullscreenOnce);
   }, []);
 }
 
