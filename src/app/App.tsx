@@ -41,35 +41,13 @@ function useKioskGestureLock(): void {
 }
 
 /**
- * Algunos totems (navegador dentro de una app Android en modo kiosco) no
- * entran solos a pantalla completa al cargar - los navegadores exigen un
- * gesto real del usuario para requestFullscreen(), asi que no se puede
- * disparar automaticamente en el primer render. Esto engancha el PRIMER
- * click en cualquier parte de la pantalla para pedir fullscreen ahi mismo
- * (una sola vez) y despues se desconecta solo.
- *
- * Escucha "click", NO "pointerdown": pointerdown dispara ANTES de que el
- * boton tocado procese su propio click (pointerdown -> pointerup -> click),
- * asi que pedir fullscreen ahi podia redimensionar la pagina a mitad del
- * gesto y hacer que el click real (ej. "Iniciar") no llegara a registrarse.
- * Con "click", el boton ya disparo su propio onClick primero.
+ * DESACTIVADO: intento de forzar pantalla completa en el primer click, para
+ * totems que no entran solos a fullscreen. Interfirio con el click real del
+ * usuario y rompio el boton "Iniciar" en pleno evento (dos veces, incluso
+ * despues de cambiar de "pointerdown" a "click"). Se puede retomar despues
+ * del evento con mas tiempo para probarlo bien en el totem real - por ahora
+ * prioridad total a que el boton funcione siempre.
  */
-function useForceFullscreenOnFirstTap(): void {
-  useEffect(() => {
-    if (document.fullscreenElement) return;
-
-    const requestFullscreenOnce = () => {
-      document.removeEventListener("click", requestFullscreenOnce);
-      void document.documentElement.requestFullscreen?.().catch(() => {
-        // Algunos navegadores/politicas rechazan el pedido (ej. ya esta en
-        // fullscreen via la app nativa del totem) - no es un error real.
-      });
-    };
-
-    document.addEventListener("click", requestFullscreenOnce, { once: true });
-    return () => document.removeEventListener("click", requestFullscreenOnce);
-  }, []);
-}
 
 function CurrentScreen() {
   const { screen } = useFlow();
@@ -99,7 +77,10 @@ function AppShell() {
   const { reset } = useFlow();
   useIdleReset(reset);
   useKioskGestureLock();
-  useForceFullscreenOnFirstTap();
+  // Desactivado: interferia con el primer click real del usuario (rompio el
+  // boton "Iniciar" dos veces en el evento). Se puede reactivar despues del
+  // evento, con mas tiempo para probarlo bien en el totem real.
+  // useForceFullscreenOnFirstTap();
   useEffect(() => initOutboxFlush(), []);
   // Arranca en el mismo instante que Welcome (no espera a llegar a Game) -
   // ver el comentario en game/products.ts#preloadProductAssets.
