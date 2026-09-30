@@ -67,6 +67,14 @@
   color: var(--color-text);
 }
 
+/*
+ * font-size/line-height reducidos (no son los originales de Figma):
+ * "ACUMULASTE" solo cabia en 1 linea a 5.68cqh. "ACUMULASTE EN ESTA
+ * EXPERIENCIA" ocupa 2 lineas, y con el top fijo de .positionStack (pensado
+ * para una sola linea de label) la segunda linea se metia encima del stack
+ * de abajo (bug real visto en el evento). Letra mas chica para que las 2
+ * lineas quepan antes de donde arranca .positionStack.
+ */
 .label {
   position: absolute;
   left: 50%;
@@ -78,10 +86,10 @@
   font-weight: 800;
   font-style: italic;
   text-transform: uppercase;
-  letter-spacing: 0.36cqh;
+  letter-spacing: 0.3cqh;
   font-stretch: 50%;
-  font-size: 5.68cqh;
-  line-height: 6.88cqh;
+  font-size: 4.3cqh;
+  line-height: 5.2cqh;
   color: #000;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #fff;
@@ -94,12 +102,13 @@
  * competing with the actual design. Envuelve las dos lineas (posicion en
  * Memory Match + posicion en el ranking general) en un stack vertical - antes
  * cada una tenia su propio position:absolute con el MISMO top, asi que se
- * pintaban una encima de la otra en vez de una debajo de la otra.
+ * pintaban una encima de la otra en vez de una debajo de la otra. top movido
+ * mas abajo para dejar espacio a las 2 lineas de .label de arriba.
  */
 .positionStack {
   position: absolute;
   left: 50%;
-  top: 65.5cqh;
+  top: 71cqh;
   width: 47.24cqh;
   transform: translateX(-50%);
   display: flex;
