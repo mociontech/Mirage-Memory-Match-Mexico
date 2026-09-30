@@ -92,12 +92,14 @@ export function Result() {
       <h1 className={`${styles.title} enterFromLeft delay1`}>¡Gracias por participar!</h1>
       <div className={`${styles.scoreBox} enterScale delay2`}>{Math.round(session.score)}</div>
       <p className={`${styles.label} enterFade delay3`}>Acumulaste en esta experiencia</p>
-      {position !== null && (
-        <p className={`${styles.position} enterFade delay4`}>En Memory Match vas en el puesto #{position}</p>
-      )}
-      {combinedPosition !== null && (
-        <p className={`${styles.position} enterFade delay4`}>Vas en el puesto #{combinedPosition} del ranking general</p>
-      )}
+      <div className={styles.positionStack}>
+        {position !== null && (
+          <p className={`${styles.position} enterFade delay4`}>En Memory Match vas en el puesto #{position}</p>
+        )}
+        {combinedPosition !== null && (
+          <p className={`${styles.position} enterFade delay4`}>Vas en el puesto #{combinedPosition} del ranking general</p>
+        )}
+      </div>
       <Footer />
     </div>
   );

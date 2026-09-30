@@ -91,14 +91,23 @@
 /*
  * Not in Figma - added on request, kept deliberately subtle (small, muted,
  * plain weight) so it reads as a quiet aside under "ACUMULASTE" rather than
- * competing with the actual design.
+ * competing with the actual design. Envuelve las dos lineas (posicion en
+ * Memory Match + posicion en el ranking general) en un stack vertical - antes
+ * cada una tenia su propio position:absolute con el MISMO top, asi que se
+ * pintaban una encima de la otra en vez de una debajo de la otra.
  */
-.position {
+.positionStack {
   position: absolute;
   left: 50%;
   top: 65.5cqh;
   width: 47.24cqh;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6cqh;
+}
+
+.position {
   margin: 0;
   font-family: var(--font-body);
   font-size: 2.2cqh;
