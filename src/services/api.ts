@@ -22,6 +22,18 @@ const RANKING_DB_URL = import.meta.env.VITE_RANKING_DB_URL;
 const RANKING_DB_API_KEY = import.meta.env.VITE_RANKING_DB_API_KEY;
 const RANKING_DB_TABLE = import.meta.env.VITE_RANKING_DB_TABLE || "participations";
 
+/**
+ * Fecha local (YYYY-MM-DD) de "ahora" en la zona horaria del pais de este
+ * despliegue - tiene que dar el mismo valor que el event_day calculado en
+ * ranking_by_experience/ranking_combined (ver docs/supabase-schema.sql del
+ * proyecto Catalogo). El ranking (y el premio) se maneja por dia: cada dia
+ * del evento de una semana arranca en position 1 de nuevo.
+ */
+function getEventDay(): string {
+  const timeZone = COUNTRY === "CO" ? "America/Bogota" : "America/Mexico_City";
+  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+}
+
 export interface RankingEntry {
   name: string;
   points: number;
@@ -174,6 +186,7 @@ export async function fetchRanking(): Promise<RankingEntry[]> {
   try {
     const query = new URLSearchParams({
       country: `eq.${COUNTRY}`,
+      event_day: `eq.${getEventDay()}`,
       order: "position.asc",
       limit: "10",
     });
@@ -211,6 +224,7 @@ export async function fetchMyPosition(email: string): Promise<number | null> {
       participant_id: `eq.${normalizeEmail(email)}`,
       country: `eq.${COUNTRY}`,
       experience: "eq.memory_match",
+      event_day: `eq.${getEventDay()}`,
       select: "position",
     });
     const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_by_experience?${query}`, {
@@ -239,6 +253,7 @@ export async function fetchMyCombinedPosition(email: string): Promise<number | n
     const query = new URLSearchParams({
       participant_id: `eq.${normalizeEmail(email)}`,
       country: `eq.${COUNTRY}`,
+      event_day: `eq.${getEventDay()}`,
       select: "position",
     });
     const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_combined?${query}`, {
