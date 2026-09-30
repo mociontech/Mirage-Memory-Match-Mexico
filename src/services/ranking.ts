@@ -1,4 +1,4 @@
-import { fetchMyPosition, fetchRanking, type RankingEntry } from "./api";
+import { fetchMyCombinedPosition, fetchMyPosition, fetchRanking, type RankingEntry } from "./api";
 
 export type { RankingEntry };
 
@@ -37,7 +37,12 @@ export function prefetchTop10(): void {
   });
 }
 
-/** This participant's rank (1 = highest score), or null if not available yet — same never-block contract as getTop10. */
+/** This participant's rank within memory_match only (1 = highest score), or null if not available yet — same never-block contract as getTop10. */
 export async function getMyPosition(email: string): Promise<number | null> {
   return fetchMyPosition(email);
+}
+
+/** This participant's rank in the general/combined ranking (the one that decides the prize). */
+export async function getMyCombinedPosition(email: string): Promise<number | null> {
+  return fetchMyCombinedPosition(email);
 }

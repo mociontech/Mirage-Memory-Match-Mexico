@@ -5,7 +5,7 @@ import { Footer } from "../../components/Footer";
 import { Logo } from "../../components/Logo";
 import { rememberUsedEmail, rememberUsedId } from "../../services/idService";
 import { enqueueParticipation } from "../../services/outbox";
-import { getMyPosition, prefetchTop10 } from "../../services/ranking";
+import { getMyCombinedPosition, getMyPosition, prefetchTop10 } from "../../services/ranking";
 import type { Participation } from "../../types/participation";
 import styles from "./Result.module.css";
 
@@ -32,6 +32,7 @@ export function Result() {
   const { navigate, session } = useFlow();
   const submitted = useRef(false);
   const [position, setPosition] = useState<number | null>(null);
+  const [combinedPosition, setCombinedPosition] = useState<number | null>(null);
 
   useEffect(() => {
     if (submitted.current) return;
@@ -66,6 +67,9 @@ export function Result() {
         getMyPosition(session.email!).then((result) => {
           if (!cancelled && result !== null) setPosition(result);
         });
+        getMyCombinedPosition(session.email!).then((result) => {
+          if (!cancelled && result !== null) setCombinedPosition(result);
+        });
       }, delay),
     );
     return () => {
@@ -87,9 +91,12 @@ export function Result() {
       </div>
       <h1 className={`${styles.title} enterFromLeft delay1`}>¡Gracias por participar!</h1>
       <div className={`${styles.scoreBox} enterScale delay2`}>{Math.round(session.score)}</div>
-      <p className={`${styles.label} enterFade delay3`}>Acumulaste</p>
+      <p className={`${styles.label} enterFade delay3`}>Acumulaste en esta experiencia</p>
       {position !== null && (
-        <p className={`${styles.position} enterFade delay4`}>Vas en el puesto #{position}</p>
+        <p className={`${styles.position} enterFade delay4`}>En Memory Match vas en el puesto #{position}</p>
+      )}
+      {combinedPosition !== null && (
+        <p className={`${styles.position} enterFade delay4`}>Vas en el puesto #{combinedPosition} del ranking general</p>
       )}
       <Footer />
     </div>

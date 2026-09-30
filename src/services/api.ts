@@ -162,20 +162,22 @@ export async function submitParticipation(participation: Participation): Promise
  * Top 10 for the Ranking screen. Returns an empty list if unconfigured or
  * unreachable — never throws.
  *
- * Reads participant_name off ranking_by_experience (added alongside
- * participant_id — see the migration note in .env.example). Falls back to
- * participant_id (the email) for rows submitted before that column existed.
+ * Reads `ranking_combined` (average of catalogo + memory_match per person,
+ * see docs/supabase-schema.sql in the Catalogo project) instead of
+ * `ranking_by_experience` filtered to memory_match - it's the ranking that
+ * actually decides the prize. Showing the per-experience top 10 here caused
+ * a real incident at the Mexico event: someone saw a high score/rank on this
+ * experience alone and assumed it meant they'd won.
  */
 export async function fetchRanking(): Promise<RankingEntry[]> {
   if (!RANKING_DB_URL || !RANKING_DB_API_KEY) return [];
   try {
     const query = new URLSearchParams({
       country: `eq.${COUNTRY}`,
-      experience: "eq.memory_match",
-      order: "score.desc",
+      order: "position.asc",
       limit: "10",
     });
-    const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_by_experience?${query}`, {
+    const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_combined?${query}`, {
       headers: {
         apikey: RANKING_DB_API_KEY,
         Authorization: `Bearer ${RANKING_DB_API_KEY}`,
@@ -185,21 +187,22 @@ export async function fetchRanking(): Promise<RankingEntry[]> {
     const rows = (await res.json()) as Array<{
       participant_id: string;
       participant_name?: string | null;
-      score: number;
+      final_score: number;
     }>;
-    return rows.map((row) => ({ name: row.participant_name || row.participant_id, points: row.score }));
+    return rows.map((row) => ({ name: row.participant_name || row.participant_id, points: row.final_score }));
   } catch {
     return [];
   }
 }
 
 /**
- * This participant's rank in ranking_by_experience (1 = highest score),
- * read straight off the view's own `position` column instead of
- * recomputing it client-side. Returns null if unconfigured/unreachable, or
- * if the row hasn't synced into the ranking DB yet (the submission goes
- * through the outbox and can lag a few seconds) - the caller shows nothing
- * in that case rather than a wrong or stale position.
+ * This participant's rank WITHIN memory_match only (1 = highest score),
+ * read straight off `ranking_by_experience`'s own `position` column. Used
+ * right after finishing the game to say "en esta experiencia vas en el
+ * puesto #N" - explicitly scoped, never presented as the prize-deciding
+ * rank (that's fetchMyCombinedPosition below). Returns null if
+ * unconfigured/unreachable, or if the row hasn't synced yet (the submission
+ * goes through the outbox and can lag a few seconds).
  */
 export async function fetchMyPosition(email: string): Promise<number | null> {
   if (!RANKING_DB_URL || !RANKING_DB_API_KEY) return null;
@@ -211,6 +214,34 @@ export async function fetchMyPosition(email: string): Promise<number | null> {
       select: "position",
     });
     const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_by_experience?${query}`, {
+      headers: {
+        apikey: RANKING_DB_API_KEY,
+        Authorization: `Bearer ${RANKING_DB_API_KEY}`,
+      },
+    });
+    if (!res.ok) return null;
+    const rows = (await res.json()) as Array<{ position: number }>;
+    return rows[0]?.position ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * This participant's rank in `ranking_combined` (the one that decides the
+ * prize) - shown on Result.tsx alongside (but clearly separate from) the
+ * per-experience score/position above, so nobody mistakes one for the
+ * other again.
+ */
+export async function fetchMyCombinedPosition(email: string): Promise<number | null> {
+  if (!RANKING_DB_URL || !RANKING_DB_API_KEY) return null;
+  try {
+    const query = new URLSearchParams({
+      participant_id: `eq.${normalizeEmail(email)}`,
+      country: `eq.${COUNTRY}`,
+      select: "position",
+    });
+    const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_combined?${query}`, {
       headers: {
         apikey: RANKING_DB_API_KEY,
         Authorization: `Bearer ${RANKING_DB_API_KEY}`,
