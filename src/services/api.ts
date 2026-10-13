@@ -174,23 +174,25 @@ export async function submitParticipation(participation: Participation): Promise
  * Top 10 for the Ranking screen. Returns an empty list if unconfigured or
  * unreachable — never throws.
  *
- * Reads `ranking_combined` (average of catalogo + memory_match per person,
- * see docs/supabase-schema.sql in the Catalogo project) instead of
- * `ranking_by_experience` filtered to memory_match - it's the ranking that
- * actually decides the prize. Showing the per-experience top 10 here caused
- * a real incident at the Mexico event: someone saw a high score/rank on this
- * experience alone and assumed it meant they'd won.
+ * Este despliegue puntual es SOLO Memory Match en Mexico (sin Catalogo
+ * corriendo en paralelo) - por eso lee `ranking_by_experience` filtrado a
+ * memory_match en vez de `ranking_combined`. `ranking_combined` promedia
+ * catalogo+memory_match tratando la experiencia no jugada como 0: sin
+ * Catalogo activo esa cuenta le pondria 0 de catalogo a todo el mundo y le
+ * partiria el puntaje real a la mitad. Aca Memory Match ES el ranking
+ * completo, no hay nada que combinar.
  */
 export async function fetchRanking(): Promise<RankingEntry[]> {
   if (!RANKING_DB_URL || !RANKING_DB_API_KEY) return [];
   try {
     const query = new URLSearchParams({
       country: `eq.${COUNTRY}`,
+      experience: "eq.memory_match",
       event_day: `eq.${getEventDay()}`,
       order: "position.asc",
       limit: "10",
     });
-    const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_combined?${query}`, {
+    const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_by_experience?${query}`, {
       headers: {
         apikey: RANKING_DB_API_KEY,
         Authorization: `Bearer ${RANKING_DB_API_KEY}`,
@@ -200,9 +202,9 @@ export async function fetchRanking(): Promise<RankingEntry[]> {
     const rows = (await res.json()) as Array<{
       participant_id: string;
       participant_name?: string | null;
-      final_score: number;
+      score: number;
     }>;
-    return rows.map((row) => ({ name: row.participant_name || row.participant_id, points: row.final_score }));
+    return rows.map((row) => ({ name: row.participant_name || row.participant_id, points: row.score }));
   } catch {
     return [];
   }
