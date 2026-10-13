@@ -50,8 +50,14 @@ async function postEvius(path: string, body: unknown): Promise<Response> {
   });
 }
 
-/** POST /attendees — only if there's an email, deduped by email + eventId. */
-async function submitAttendee(participation: Participation): Promise<void> {
+/**
+ * POST /attendees — only if there's an email, deduped by email + eventId.
+ * Exportado (no longer `function` local) para que outbox.ts lo pueda poner
+ * como su propia entrada independiente del outbox - ver el comentario en
+ * outbox.ts#enqueueParticipation.
+ */
+export async function submitAttendee(participation: Participation): Promise<void> {
+  if (!EVIUS_URL || !EVIUS_TOKEN || !COUNTRY) return; // Evius no configurado en este despliegue - no es un error.
   if (!participation.email) return;
   const res = await postEvius("/attendees", {
     eventId: EVIUS_EVENT_ID,
@@ -69,7 +75,8 @@ async function submitAttendee(participation: Participation): Promise<void> {
 }
 
 /** POST /experiences, falling back to /activities (score embedded as JSON) if that fails. */
-async function submitExperienceResult(participation: Participation): Promise<void> {
+export async function submitExperienceResult(participation: Participation): Promise<void> {
+  if (!EVIUS_URL || !EVIUS_TOKEN || !EVIUS_EVENT_ID || !EVIUS_EXPERIENCE_ID || !COUNTRY) return;
   const record = {
     email: normalizeEmail(participation.email),
     play_timestamp: participation.finishedAt,
@@ -111,7 +118,8 @@ async function submitExperienceResult(participation: Participation): Promise<voi
 }
 
 /** POST to the shared Supabase ranking table, deduped by (participant_id, country, experience). */
-async function submitRanking(participation: Participation): Promise<void> {
+export async function submitRanking(participation: Participation): Promise<void> {
+  if (!RANKING_DB_URL || !RANKING_DB_API_KEY) return;
   const res = await fetch(`${RANKING_DB_URL}/rest/v1/${RANKING_DB_TABLE}`, {
     method: "POST",
     headers: {
@@ -144,31 +152,19 @@ async function submitRanking(participation: Participation): Promise<void> {
   if (!res.ok) throw new Error(`Ranking DB submit failed: ${res.status}`);
 }
 
-/**
- * Sends one participation to every destination that has its own env vars
- * configured — Evius and the ranking DB are independent deployments, so one
- * being unset (e.g. Evius credentials not issued yet) must not block the
- * other. Throws if a *configured* destination's request fails; outbox.ts is
- * what decides what to do about that (retry later), this function never
- * swallows a real request failure.
+/*
+ * No existe un submitParticipation combinado - antes esto mandaba
+ * attendee+experience+ranking en un solo Promise.all, lo que significaba que
+ * si UNO fallaba (ej. un hipo transitorio de Evius), el outbox marcaba TODA
+ * la participacion como pendiente otra vez, repitiendo tambien lo que ya
+ * habia funcionado. Bug real detectado en vivo en Mexico: una persona quedo
+ * con el attendee creado en Evius pero el puntaje nunca llego, sin que el
+ * reintento automatico lo resolviera solo. Ahora outbox.ts encola
+ * `submitAttendee`, `submitExperienceResult` y `submitRanking` como tres
+ * entradas INDEPENDIENTES (cada una ya revisa su propia config arriba y es
+ * un no-op silencioso si no esta configurada) - un fallo puntual en una no
+ * bloquea ni repite las otras.
  */
-export async function submitParticipation(participation: Participation): Promise<void> {
-  const tasks: Promise<void>[] = [];
-
-  if (EVIUS_URL && EVIUS_TOKEN && COUNTRY) {
-    tasks.push(submitAttendee(participation), submitExperienceResult(participation));
-  }
-  if (RANKING_DB_URL && RANKING_DB_API_KEY) {
-    tasks.push(submitRanking(participation));
-  }
-
-  if (tasks.length === 0) {
-    throw new Error(
-      "submitParticipation: neither Evius (VITE_EVIUS_URL/VITE_EVIUS_TOKEN/VITE_COUNTRY) nor the ranking DB (VITE_RANKING_DB_URL/VITE_RANKING_DB_API_KEY) are configured",
-    );
-  }
-  await Promise.all(tasks);
-}
 
 /**
  * Top 10 for the Ranking screen. Returns an empty list if unconfigured or
@@ -243,31 +239,3 @@ export async function fetchMyPosition(email: string): Promise<number | null> {
   }
 }
 
-/**
- * This participant's rank in `ranking_combined` (the one that decides the
- * prize) - shown on Result.tsx alongside (but clearly separate from) the
- * per-experience score/position above, so nobody mistakes one for the
- * other again.
- */
-export async function fetchMyCombinedPosition(email: string): Promise<number | null> {
-  if (!RANKING_DB_URL || !RANKING_DB_API_KEY) return null;
-  try {
-    const query = new URLSearchParams({
-      participant_id: `eq.${normalizeEmail(email)}`,
-      country: `eq.${COUNTRY}`,
-      event_day: `eq.${getEventDay()}`,
-      select: "position",
-    });
-    const res = await fetch(`${RANKING_DB_URL}/rest/v1/ranking_combined?${query}`, {
-      headers: {
-        apikey: RANKING_DB_API_KEY,
-        Authorization: `Bearer ${RANKING_DB_API_KEY}`,
-      },
-    });
-    if (!res.ok) return null;
-    const rows = (await res.json()) as Array<{ position: number }>;
-    return rows[0]?.position ?? null;
-  } catch {
-    return null;
-  }
-}

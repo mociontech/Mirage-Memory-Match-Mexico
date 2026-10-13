@@ -1,4 +1,4 @@
-import { submitParticipation } from "./api";
+import { submitAttendee, submitExperienceResult, submitRanking } from "./api";
 import type { Participation } from "../types/participation";
 
 const OUTBOX_KEY = "kam:outbox";
@@ -13,16 +13,41 @@ const RETRY_DELAYS_MS = [1000, 2000, 4000, 8000] as const; // 4 delays -> 5 tota
  */
 const POLL_INTERVAL_MS = 20_000;
 
-function readOutbox(): Participation[] {
+type Destination = "eviusAttendee" | "eviusExperience" | "rankingDb";
+
+interface OutboxRecord {
+  id: string; // `${participation.id}:${destination}` - unico por destino, no por participacion.
+  destination: Destination;
+  participation: Participation;
+}
+
+/**
+ * Cada destino se reintenta por su cuenta: antes esto mandaba
+ * attendee+experience+ranking en un solo submitParticipation con
+ * Promise.all, asi que si UNO fallaba, el outbox volvia a reintentar TODO
+ * el grupo, repitiendo tambien lo que ya habia funcionado. Bug real
+ * detectado en vivo en Mexico: una persona quedo con el attendee creado en
+ * Evius pero el puntaje nunca llego, sin que el reintento automatico lo
+ * resolviera solo. Ahora cada entrada es independiente y se borra del
+ * outbox en cuanto SU propio envio tiene exito, sin importar que les pase a
+ * las otras dos.
+ */
+const DELIVERERS: Record<Destination, (participation: Participation) => Promise<void>> = {
+  eviusAttendee: submitAttendee,
+  eviusExperience: submitExperienceResult,
+  rankingDb: submitRanking,
+};
+
+function readOutbox(): OutboxRecord[] {
   try {
     const raw = localStorage.getItem(OUTBOX_KEY);
-    return raw ? (JSON.parse(raw) as Participation[]) : [];
+    return raw ? (JSON.parse(raw) as OutboxRecord[]) : [];
   } catch {
     return [];
   }
 }
 
-function writeOutbox(entries: Participation[]): void {
+function writeOutbox(entries: OutboxRecord[]): void {
   localStorage.setItem(OUTBOX_KEY, JSON.stringify(entries));
 }
 
@@ -31,13 +56,18 @@ function removeFromOutbox(id: string): void {
 }
 
 /**
- * Persists a finished game's result locally so the UI can move on to Result
- * immediately, then kicks off a background flush. Never awaited by callers.
+ * Persists a finished game's result locally as 3 independent per-destination
+ * entries, so the UI can move on to Result immediately, then kicks off a
+ * background flush. Never awaited by callers.
  */
 export function enqueueParticipation(participation: Participation): void {
   const outbox = readOutbox();
-  if (!outbox.some((entry) => entry.id === participation.id)) {
-    writeOutbox([...outbox, participation]);
+  const destinations: Destination[] = ["eviusAttendee", "eviusExperience", "rankingDb"];
+  const newEntries = destinations
+    .map((destination) => ({ id: `${participation.id}:${destination}`, destination, participation }))
+    .filter((record) => !outbox.some((entry) => entry.id === record.id));
+  if (newEntries.length > 0) {
+    writeOutbox([...outbox, ...newEntries]);
   }
   void flushOutbox();
 }
@@ -46,10 +76,11 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function sendWithRetries(participation: Participation): Promise<boolean> {
+async function sendWithRetries(record: OutboxRecord): Promise<boolean> {
+  const deliver = DELIVERERS[record.destination];
   for (let attempt = 0; ; attempt++) {
     try {
-      await submitParticipation(participation);
+      await deliver(record.participation);
       return true;
     } catch {
       const delay = RETRY_DELAYS_MS[attempt];
@@ -70,9 +101,9 @@ export async function flushOutbox(): Promise<void> {
   if (isFlushing) return;
   isFlushing = true;
   try {
-    for (const participation of readOutbox()) {
-      const sent = await sendWithRetries(participation);
-      if (sent) removeFromOutbox(participation.id);
+    for (const record of readOutbox()) {
+      const sent = await sendWithRetries(record);
+      if (sent) removeFromOutbox(record.id);
     }
   } finally {
     isFlushing = false;
