@@ -13,6 +13,7 @@ import { Footer } from "../../components/Footer";
 import { ProductPopup } from "../../components/ProductPopup";
 import { Logo } from "../../components/Logo";
 import { Card } from "./Card";
+import { nowLocalIso } from "../../services/timeService";
 import styles from "./Game.module.css";
 
 /**
@@ -45,7 +46,7 @@ export function Game() {
   // Intentionally run-once: useFlow() returns a fresh setSession on every
   // render, so including it here would re-stamp startedAt on every render.
   useEffect(() => {
-    setSession({ startedAt: new Date().toISOString() });
+    setSession({ startedAt: nowLocalIso() });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,7 +73,7 @@ export function Game() {
         score,
         attempts,
         matchedProducts: matchedProductIds,
-        finishedAt: new Date().toISOString(),
+        finishedAt: nowLocalIso(),
       });
       // Felicidades queda fuera del flujo (aporta poco visualmente) sin
       // borrar la pantalla - salta directo a Result. navigate("felicidades")
